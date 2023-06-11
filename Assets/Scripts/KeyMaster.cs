@@ -1,46 +1,38 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using System;
 
 public class KeyMaster : MonoBehaviour
 {
-   [SerializeField] private GameObject firstScreen;
-   [SerializeField] private GameObject secondScreen;
-   [SerializeField] private GameObject winScreen;
-   private GameObject currentScreen;
- //  private Text minutes;
-   private Text seconds;
-   public Text timerText;
-   public float time = 60;
-   private TimeSpan timer = new TimeSpan(60);
-   public Text pinOne;
-   public Text pinTwo;
-   public Text pinThree;
-   public Text winText;
-   private int a;
-   private int b;
-   private int c;
-
+    public GameObject firstScreen;
+    public GameObject secondScreen;
+    public GameObject winScreen;
+    public GameObject winScreen2;
+    public GameObject loseScreen;
+    private GameObject currentScreen;
+    private Text seconds;
+    public Text timerText;
+    public float time = 60;
+    private TimeSpan timer = new TimeSpan(60);
+    public Text pinOne;
+    public Text pinTwo;
+    public Text pinThree;
+    public Text winText;
+    private int a;
+    private int b;
+    private int c;
+    public int counterClick;
+    public Text counterClickText;
+    string[] nums = { "6", "3", "6", "6", "4", "4", "7", "2", "4" };
+    int one = 0;
+    int two = 1;
+    int three = 2;
     private void Start()
     {
         firstScreen.SetActive(true);
-        currentScreen = firstScreen;
-       
+        currentScreen = firstScreen;       
     }
-
-   // public void Update()
-   // {
-   // time = Mathf.Round(Time.time);
-   //  	//timer = timer -60;
-   // for (int i = 0; i < 10; i++)
-  	//  {
-   //  	timerText.text = time.ToString("00"); 
-   //  	Debug.Log (i);
- 	 //  }
-   // 	//timerText.text = timer.ToString();
-   // }
     public void Timer()
     {
     	time --;
@@ -48,9 +40,8 @@ public class KeyMaster : MonoBehaviour
     	timerText.text = timer.Seconds.ToString("00");
     	if (time == 0)
     	{
-    		timeOut();
-    	}
-    	
+    		TimeOut();
+    	}    	
     }
 
     public IEnumerator Cowntdown()
@@ -62,38 +53,48 @@ public class KeyMaster : MonoBehaviour
     	}
     }
 
-	private void timeOut()
+	private void TimeOut()
    	{
-   		winScreen.SetActive(true);
+   		loseScreen.SetActive(true);
     	winText.text = "Вы проиграли";
     }
 
 
-    public void restart()
+    public void Restart()
     {
-    	pinOne.text = "4";
-    	pinTwo.text = "6";
-    	pinThree.text = "5";
+        counterClickText.text = "5";
+        counterClick = 5;
+    	pinOne.text = nums[one];
+    	pinTwo.text = nums[two];
+    	pinThree.text = nums[three];
     	winScreen.SetActive(false);
-    	time = 60;
+        loseScreen.SetActive(false);
+        secondScreen.SetActive(true);
+        time = 60;
     	StartCoroutine(Cowntdown());
     }
 
-    private void finish()
-    {
-		if (a == 5)
-  	    {  	    
-    	  if (b == 5)
-    	   {    	   
-    		 if (c == 5)
-    		 {
+    private void Finish()
+    {        
+		if (a == 5 && b == 5 && c == 5)
+  	    {  	     
     		   winScreen.SetActive(true);
-    		   time = 0;
+            secondScreen.SetActive(false);
+            time = 0;
     		   winText.text = "Вы победили";
-    		 }
-    	   }
-    	
+            one += 3;
+            two += 3;
+            three += 3;
+            if (one == 9) 
+            {
+                winScreen.SetActive(false);
+                winScreen2.SetActive(true);            
+            }
    	    }
+        if (counterClick == 0)
+        {
+            TimeOut();
+        }
    	}
 
    	    public void ChangeState(GameObject state)
@@ -107,36 +108,38 @@ public class KeyMaster : MonoBehaviour
         }
     }
 
-    public void keyButton1_OnPress()
+    public void KeyButton1_OnPress()
     {
-    	a = int.Parse(pinOne.text);
+        counterClickText.text = (--counterClick).ToString();
+        a = int.Parse(pinOne.text);
     	if (a < 10)
     	{
-    		a = a + 1;
+    		a ++;
     		pinOne.text = $"{a}";
     	}
     	b = int.Parse(pinTwo.text);
     	if (b > 0)
     	{
-    		b = b - 1;
+    		b --;
     		pinTwo.text = $"{b}";
     	}
     	c = int.Parse(pinThree.text);
-    	finish();    	
+    	Finish();    	
     }
 
-    public void keyButton2_OnPress()
+    public void KeyButton2_OnPress()
     {
-    	a = int.Parse(pinOne.text);
+        counterClickText.text = (--counterClick).ToString();
+        a = int.Parse(pinOne.text);
     	if (a > 0)
     	{
-    		a = a - 1;
+    		a --;
     		pinOne.text = $"{a}";
     	}
     	b = int.Parse(pinTwo.text);
     	if (b < 10)
     	{
-    		b = b + 2;
+    		b += 2;
     		if (b == 11)
     		{
     			b = 10;
@@ -148,34 +151,41 @@ public class KeyMaster : MonoBehaviour
     	c = int.Parse(pinThree.text);
     	if (c > 0)
     	{
-    		c = c - 1;
+    		c --;
     		pinThree.text = $"{c}";
     	}
-    	finish();
+    	Finish();
     }
 
-    public void keyButton3_OnPress()
+    public void KeyButton3_OnPress()
     {
-    	a = int.Parse(pinOne.text);
+        counterClickText.text = (--counterClick).ToString();
+        a = int.Parse(pinOne.text);
     	if (a > 0)
     	{
-    		a = a - 1;
+    		a --;
     		pinOne.text = $"{a}";
     	}
     	b = int.Parse(pinTwo.text);
     	if (b < 10)
     	{
-    		b = b + 1;
+    		b ++;
     		pinTwo.text = $"{b}";
     	}
     	c = int.Parse(pinThree.text);
     	if (c < 10)
     	{
-    		c = c + 1;
+    		c ++;
     		pinThree.text = $"{c}";
     	}
-    	finish();
+    	Finish();
     }
-
-
+    public void Win2()
+    {
+        winScreen2.SetActive(false);
+        firstScreen.SetActive(true);
+        one = 0;
+        two = 1;
+        three = 2;
+    }
 }
